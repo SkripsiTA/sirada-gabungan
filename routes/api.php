@@ -14,6 +14,7 @@ use App\Http\Controllers\API\Data\BanjarAdatDataController;
 use App\Http\Controllers\API\Data\DataSuratController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\UploadFileController;
+use App\Http\Controllers\API\Data\AgendaController;
 
 
 /*
@@ -121,3 +122,6 @@ Route::get('notifikasi/send', [NotificationController::class, 'send_notification
 Route::post('upload/profile-picture', [UploadFileController::class, 'save_profile_picture']);
 Route::post('upload/logo-desa', [UploadFileController::class, 'save_logo_desa']);
 Route::post('upload/struktur_desa', [UploadFileController::class, 'save_struktur_desa']);
+
+//agenda acara
+Route::get('agenda/{id}/internal', [AgendaController::class, 'show_agenda_internal']);
