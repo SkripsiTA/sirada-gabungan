@@ -17,6 +17,16 @@
   <!-- Page plugins -->
   <!-- Argon CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/argon.css?v=1.2.0') }}" type="text/css">
+  <link type="text/css" href="{{ asset('assets/dist/css/select2.min.css') }}" rel="stylesheet">
+  <script src="{{ asset('assets/dist/js/select2.min.js') }}" defer></script>
+  <style>
+    .select2-container .select2-selection {
+        line-height: 1.6 !important;
+        height: 100% !important;
+        border-radius: 3px !important;
+        border-block-color: greyscale !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -78,7 +88,7 @@
                             </form>
                         </div>
                         <div class="float-right">
-                            <a href="{{ route('create-panitia-desa-adat') }}" type="button" class="btn btn-md btn-primary"><i class="fa fa-plus"></i>
+                            <a href="#" type="button" class="btn btn-md btn-primary" id="addData" data-target="#formKegiatanPanitia"><i class="fa fa-plus"></i>
                             Tambah</a>
                         </div>
                     </div>
@@ -156,32 +166,63 @@
       @include('sweetalert::alert')
 
       <!-- Modal Add -->
-      {{--  @include('admin.masterdata.pegawai.edit-prajuru-desa')  --}}
-
-    {{--  @foreach($prajurudesa as $data)
-    <div class="modal fade" id="deletePrajuruDesa{{ $data->prajuru_desa_adat_id }}">
-        <div class="modal-dialog">
-            <div class="modal-content bg-secondary">
+      <div class="modal fade" id="formKegiatanPanitia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">{{ $data->kramamipil->cacahkramamipil->penduduk->nama }}</h4>
+                <h5 class="modal-title" id="ajaxKegiatanPanitia"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>Apakah anda yakin ingin menghapus data?</p>
+            <form action="{{ route('get-kegiatan-panitia') }}" id="myForm" name="myForm" class="form-horizontal" method="POST">
+                {{--  {{ csrf_field() }}  --}}
+                <div class="modal-body">
+                    {{-- Error Alert --}}
+                    {{--  @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <strong>Whoops!</strong> Inputan yang anda berikan salah!<br><br>
+                        </div>
+                    @endif  --}}
+                    <input type="hidden" id="kegiatan_surat_id" name="kegiatan_surat">
+                    <div class="pl-lg-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="input-email">Panitia Kegiatan</label>
+                                    <select name="panitiakegiatan" class="panitia_kegiatan form-control" id="panitiakegiatan" style="height: 100%; display:block;" required>
+                                        <option value="">-- Pilih Panitia Kegiatan --</option>
+                                        @foreach ($kegiatanpanitia as $data)
+                                            <option value="{{ $data->kegiatan_panitia_id }}" data-id="{{ $data->kegiatan_panitia_id }}" data-nama="{{ $data->panitia }}">{{ $data->panitia }}</option>
+                                        @endforeach
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input checkbox" id=" customCheckLogin" type="checkbox">
+                                    <label class="custom-control-label" for=" customCheckLogin">
+                                    <span class="text-muted">Input Manual</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="text" name="panitia_kegiatan" class="form-control" id="inputpanitia" placeholder="Panitia Kegiatan" style="display: none; margin-top: 10px;" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btnnext" value="add">Selanjutnya</button>
+                </div>
+            </form>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">No</button>
-                <a href="/prajuru/desaadat/delete/{{ $data->prajuru_desa_adat_id }}" type="button" class="btn btn-outline-light">Yes</a>
-            </div>
-            </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-    @endforeach  --}}
+      </div>
+
 
     </div>
   </div>
@@ -242,6 +283,103 @@
             });
     });
 
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#panitia_kegiatan').select2();
+    });
+
+    $(document).ready(function ($) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#addData').click(function () {
+            $('#myForm').trigger("reset");
+            $('#ajaxKegiatanPanitia').html("Pilih Kegiatan Kepanitiaan");
+            window.$('#formKegiatanPanitia').modal('show');
+        });
+
+        $('#next').click(function () {
+            var kegiatanid = $('#panitiakegiatan').find(':selected').data('id');
+            var panitia = $('#panitiakegiatan').find(':selected').data('nama');
+            var input = $('#inputpanitia').val();
+            console.log(input);
+
+            if(input.length != ''){
+                alert(input);
+            } else if(panitia.length != '') {
+                //ajax
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('create-panitia-desa-adat') }}",
+                    data: { kegiatanid: kegiatanid },
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#tim_kegiatan_id').val(res.kegiatanid);
+                        $('#tim_kegiatan').val(res.panitia);
+                    }
+
+                });
+                {{--  alert(panitia);  --}}
+            } else {
+                swal("Data tidak ditemukan!");
+            }
+
+        });
+
+        $('#btn_save').click(function (event) {
+            var master_surat_id = $("#master_surat_id").val();
+            var kode_nomor_surat = $("#kode_nomor_surat").val();
+            var keterangan = $("#keterangan").val();
+
+            $("#btn_save").html('Mohon ditunggu...');
+            $("#btn_save").attr("disabled", true);
+
+            //ajax
+            $.ajax({
+                type: "POST",
+                url: "{{ route('add-update-nomor-surat') }}",
+                data: {
+                    master_surat_id: master_surat_id,
+                    kode_nomor_surat: kode_nomor_surat,
+                    keterangan: keterangan,
+                },
+                dataType: 'json',
+                success: function (res) {
+                    window.location.reload();
+                    $("#btn_save").html('Submit');
+                    $("#btn_save").attr("disabled", false);
+                    swal("Sukses!", "Data berhasil ditambahkan!", "success");
+                },
+                error: function (request, status, error) {
+                    swal(request.responseText);
+                }
+            });
+        });
+    });
+  </script>
+
+  <script>
+    $(document).ready(function(){
+        $('.checkbox').click(function(){
+        if ($('.checkbox').is(":checked")) {
+            document.getElementById("inputpanitia").style.display = "block";
+            $("#panitiakegiatan").attr("disabled", true);
+            $('#panitiakegiatan').val('');
+        } else {
+            document.getElementById("inputpanitia").style.display = "none";
+            $("#panitiakegiatan").removeAttr("disabled");
+            $('#inputpanitia').val('');
+        }
+        });
+
+
+    });
   </script>
 
   <!-- Argon Scripts -->

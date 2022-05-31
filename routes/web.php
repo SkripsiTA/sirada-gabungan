@@ -123,6 +123,7 @@ Route::get('/prajuru/banjaradat/detail/{id}', [PrajuruBanjarController::class, '
 Route::get('/panitia/desaadat', [PanitiaDesaController::class, 'index'])->name('panitia-desa-adat');
 Route::get('/panitia/desaadat/create', [PanitiaDesaController::class, 'create'])->name('create-panitia-desa-adat');
 Route::post('/panitia/desaadat/add', [PanitiaDesaController::class, 'store'])->name('add-panitia-desa-adat');
+Route::post('/panitia/desaadat/getkegiatan', [PanitiaDesaController::class, 'getkegiatan'])->name('get-kegiatan-panitia');
 
 //Profile
 Route::get('/profile/show/{id}', [UserController::class, 'show'])->name('show-profile');

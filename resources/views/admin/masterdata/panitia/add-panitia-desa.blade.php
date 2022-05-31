@@ -122,17 +122,13 @@
                                     </select>
                                 </div>
                               </div>
-                              {{--  <div class="col-lg-12">
+                              <div class="col-lg-12">
                                 <div class="form-group">
                                     <label class="form-control-label" for="input-email">Panitia Kegiatan</label>
-                                    <select name="panitia_kegiatan" class="panitia_kegiatan form-control" id="panitia_kegiatan" style="height: 100%" required>
-                                        <option value="">-- Pilih Panitia Kegiatan --</option>
-                                        @foreach ($kegiatan as $data)
-                                            <option value="{{ $data->kegiatan_panitia_id }}">{{ $data->panitia }}</option>
-                                        @endforeach
-                                      </select>
+                                    <input class="form-control" name="tim_kegiatan" id="tim_kegiatan" placeholder="Panitia Kegiatan" type="text" value="" readonly>
+                                    <input class="form-control" name="tim_kegiatan_id" id="tim_kegiatan_id" type="hidden" value="">
                                 </div>
-                              </div>  --}}
+                              </div>
                               <div class="col-lg-12">
                                 <label class="form-control-label" for="input-country">Periode Menjabat<i class="text-danger text-sm text-bold">*</i></label>
                                 <div class="input-daterange datepicker1 row align-items-center">

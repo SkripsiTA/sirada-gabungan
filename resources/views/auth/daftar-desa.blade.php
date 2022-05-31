@@ -209,7 +209,7 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <label>Peta Lokasi</label>
-                                        <label class="text-danger"><small>(Drag and Drop marker untuk menentukan posisi objek wisata)</small></label>
+                                        <label class="text-danger"><small>(Drag and Drop marker untuk menentukan posisi desa)</small></label>
                                         <div id="map" style="width: 100%; height: 400px; "></div>
                                       </div>
                                     </div>

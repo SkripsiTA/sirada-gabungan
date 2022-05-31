@@ -21,12 +21,17 @@ class PanitiaDesaController extends Controller
     public function index()
     {
         $panitiadesa = PanitiaDesa::with(['desaadat','kramamipil'])->paginate(10);
+        $kegiatanpanitia = KegiatanPanitia::all();
 
         // dd($prajurubanjar);
 
-        return view('admin.masterdata.panitia.panitia-desa', compact('panitiadesa'));
+        return view('admin.masterdata.panitia.panitia-desa', compact('panitiadesa', 'kegiatanpanitia'));
     }
 
+    public function getkegiatan(Request $request)
+    {
+        dd($request->all());
+    }
     public function create()
     {
         $kramamipil = KramaMipil::with(['banjaradat', 'cacahkramamipil'])->get();

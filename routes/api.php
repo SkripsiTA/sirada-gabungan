@@ -125,3 +125,4 @@ Route::post('upload/struktur_desa', [UploadFileController::class, 'save_struktur
 
 //agenda acara
 Route::get('agenda/{id}/internal', [AgendaController::class, 'show_agenda_internal']);
+Route::get('agenda/{id}/undangan', [AgendaController::class, 'show_agenda_undangan']);
